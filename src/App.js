@@ -7,6 +7,13 @@ import  { tokenUrl, instanceLocator } from './config'
 
 class App extends React.Component {
 
+  constructor() {
+    super()
+    this.state = {
+      messages: []
+    }
+  }
+
   componentDidMount(){
     const chatManager = new Chatkit.ChatManager({
       instanceLocator: instanceLocator,
@@ -19,10 +26,14 @@ class App extends React.Component {
     chatManager.connect()
     .then(currentUser => {
       currentUser.subscribeToRoomMultipart({
-        roomId: 'fe4ec7e3-5778-43f3-b164-7eac94aefb66',
+        roomId: currentUser.rooms[0].id,
         hooks: {
-          onNewMessage: message => {
-            console.log(currentUser.id, message.parts[0].payload.content, message.createdAt)
+          onMessage: message => 
+          {
+            console.log("Received message:", message.parts[0].payload.content, message.createdAt);
+            this.setState({
+              messages: [...this.state.messages, message]
+            })
           }
         }
       });
@@ -33,6 +44,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('this.state.messages:', this.state.messages);
     return (
       <div className="app">
         <MessageList />
