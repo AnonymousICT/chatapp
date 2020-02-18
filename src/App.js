@@ -2,6 +2,7 @@ import React from 'react';
 // import Chatkit from '@pusher/chatkit'
 import Chatkit from '@pusher/chatkit-client'
 import MessageList from './components/messageList'
+import SendMessageForm from './components/sendMessageForm'
 
 import  { tokenUrl, instanceLocator } from './config'
 
@@ -48,6 +49,7 @@ class App extends React.Component {
     return (
       <div className="app">
         <MessageList messages={this.state.messages}/>
+        <SendMessageForm />
       </div>
     )
   }
