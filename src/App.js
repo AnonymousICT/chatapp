@@ -30,7 +30,7 @@ class App extends React.Component {
         hooks: {
           onMessage: message => 
           {
-            console.log("Received message:", message.parts[0].payload.content, message.createdAt);
+            // console.log("Received message:", message.parts[0].payload.content, message.createdAt);
             this.setState({
               messages: [...this.state.messages, message]
             })
@@ -44,10 +44,10 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('this.state.messages:', this.state.messages);
+    // console.log('this.state.messages:', this.state.messages);
     return (
       <div className="app">
-        <MessageList />
+        <MessageList messages={this.state.messages}/>
       </div>
     )
   }
