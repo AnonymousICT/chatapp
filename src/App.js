@@ -1,5 +1,4 @@
 import React from 'react';
-// import Chatkit from '@pusher/chatkit'
 import Chatkit from '@pusher/chatkit-client'
 import MessageList from './components/messageList'
 import SendMessageForm from './components/sendMessageForm'
@@ -13,11 +12,12 @@ class App extends React.Component {
     this.state = {
       messages: []
     }
+    this.sendMessage = this.sendMessage.bind(this)
   }
 
   componentDidMount(){
     const chatManager = new Chatkit.ChatManager({
-      instanceLocator: instanceLocator,
+      instanceLocator,
       userId: 'LemonICT',
       tokenProvider: new Chatkit.TokenProvider({
       url: tokenUrl
@@ -26,12 +26,12 @@ class App extends React.Component {
 
     chatManager.connect()
     .then(currentUser => {
-      currentUser.subscribeToRoomMultipart({
+      this.currentUser = currentUser
+      this.currentUser.subscribeToRoomMultipart({
         roomId: currentUser.rooms[0].id,
         hooks: {
           onMessage: message => 
           {
-            // console.log("Received message:", message.parts[0].payload.content, message.createdAt);
             this.setState({
               messages: [...this.state.messages, message]
             })
@@ -44,12 +44,18 @@ class App extends React.Component {
     })
   }
 
+  sendMessage(text) {
+    this.currentUser.sendMessage({
+      text,
+      roomId: this.currentUser.rooms[0].id
+    })
+  }
+
   render() {
-    // console.log('this.state.messages:', this.state.messages);
     return (
       <div className="app">
         <MessageList messages={this.state.messages}/>
-        <SendMessageForm />
+        <SendMessageForm sendMessage={this.sendMessage}/>
       </div>
     )
   }
